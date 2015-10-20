@@ -103,3 +103,8 @@ clean:
 
 distclean: clean
 	@$(RM) -rf $(BINDIR) $(DOCDIR)/html
+
+run:
+	make 
+	@./bin/cs251_base
+

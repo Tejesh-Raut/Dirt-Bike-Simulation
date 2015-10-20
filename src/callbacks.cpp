@@ -20,6 +20,10 @@
 //! are defined
 namespace cs251
 {
+  b2Body* sbody;
+  b2Vec2 sbody_vec;
+  float32 sbody_angle;
+
   int32 test_index = 0;
   int32 test_selection = 0;
   int32 test_count = 0;
@@ -30,7 +34,7 @@ namespace cs251
   int32 height = 480;
   int32 frame_period = 16;
   int32 main_window;
-  float settings_hz = 60.0;
+  float settings_hz = 100.0;
   float32 view_zoom = 1.0f;
   int tx, ty, tw, th;
   bool r_mouse_down;
@@ -116,6 +120,30 @@ namespace cs251
     case 'p':
       settings.pause = !settings.pause;
       break;
+
+      //! Press 'w' to pan up
+    case 'w':
+      settings.view_center.y += 1.0f;
+      resize_cb(width, height);
+      break;
+
+      //! Press 's' to pan down
+    case 's':
+      settings.view_center.y -= 1.0f;
+      resize_cb(width, height);
+      break;
+
+      //! Press 'a' to pan left
+    case 'a':
+      settings.view_center.x -= 1.0f;
+      resize_cb(width, height);
+      break;
+
+      //! Press 'd' to pan right
+    case 'd':
+      settings.view_center.x += 1.0f;
+      resize_cb(width, height);
+      break;
       
       //! The default case. Why is this needed?
     default:
@@ -136,28 +164,30 @@ namespace cs251
     {
     case GLUT_ACTIVE_SHIFT:
       
-      //! Press left to pan left.
+      //! Press left to tilt backward.
     case GLUT_KEY_LEFT:
-      settings.view_center.x -= 0.5f;
-      resize_cb(width, height);
+      sbody_vec = sbody->GetPosition();
+      sbody_angle = sbody->GetAngle();
+      sbody->SetTransform( sbody_vec + b2Vec2( 0, 0 ), sbody_angle + 0.75);
       break;
       
-    //! Press right to pan right.
+    //! Press right to tilt forward.
     case GLUT_KEY_RIGHT:
-      settings.view_center.x += 0.5f;
-      resize_cb(width, height);
+      sbody_vec = sbody->GetPosition();
+      sbody_angle = sbody->GetAngle();
+      sbody->SetTransform( sbody_vec + b2Vec2( 0, 0.2 ), sbody_angle - 0.75);
       break;
       
-    //! Press down to pan down.
+    //! Press down to move back.
     case GLUT_KEY_DOWN:
-      settings.view_center.y -= 0.5f;
-      resize_cb(width, height);
+      sbody_vec = sbody->GetPosition();
+      sbody->SetTransform( sbody_vec + b2Vec2( -0.8, 0 ), 0.0);
       break;
       
-    //! Press up to pan up.
+    //! Press up to move forward.
     case GLUT_KEY_UP:
-      settings.view_center.y += 0.5f;
-      resize_cb(width, height);
+      sbody_vec = sbody->GetPosition();
+      sbody->SetTransform( sbody_vec + b2Vec2( 0.8, 0 ), 0.0);
       break;
       
     //! Press home to reset the view.
