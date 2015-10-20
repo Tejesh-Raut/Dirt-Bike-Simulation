@@ -111,7 +111,15 @@ profile:
 release:
 	CPPFLAGS+= -O3
 	make
-	
+
+report:
+	pdflatex doc/Report.tex
+	bibtex doc/Report
+	pdflatex doc/Report.tex
+	pdflatex doc/Report.tex
+
+presentation:
+	pdflatex doc/presentation.tex
 
 normal:
 	CPPFLAGS+=-g -O3
