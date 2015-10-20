@@ -37,18 +37,23 @@ using namespace std;
 
 #include "dominos.hpp"
 
+/*!
+  \namespace cs251 cs251 is a namespace
+  */
+  /*! It contains a constructor of dominos_t class and a sim pointer variable of type sim_t
+*/
 namespace cs251
 {
-  /**  The is the constructor 
-   * This is the documentation block for the constructor.
-   */ 
+      /**  This is the constructor
+   
+   */
   
   dominos_t::dominos_t()
   {
     //Ground
-    /*! \var b1 
-     * \brief pointer to the body ground 
-     */ 
+    /*! \section Upper Upper Hill 
+      * At there is upper hill code  from which bikes starts riding and comes down 
+    */
 //ground from which bike will start
       b2Body* b6; 
 	double xi,yi;
@@ -110,6 +115,9 @@ namespace cs251
     }
 	}
 //1st ground(see saw)
+       /*! \section Groung1 Plane Ground
+      * It is for plane ground on which there is see saw kept .
+      */
     b2Body* b1;  
     {
       
@@ -120,6 +128,10 @@ namespace cs251
       b1->CreateFixture(&shape, 0.0f);
     }
 //1st incline (after pendulum)
+    /*! \section Ground2 Inclined Ground after pendulum
+      * On this inclined ground, bike which comes down the upper hill gets speed and obstruction due to \b Square \b Boxes
+      * but eventually gets manages to surpaas those. 
+      */
  b2Body* b2;  
     {
       
@@ -130,6 +142,9 @@ namespace cs251
       b2->CreateFixture(&shape, 0.0f);
     }
 //barries
+    /*! \section Barrier 
+      * Its just the small inclined obstruction to hold \b Squares \b Boxes at start. 
+      */
 
  b2Body* b5;  
     {
@@ -142,6 +157,10 @@ namespace cs251
   
   }
 //2nd incline (after pendulum)
+  /*! \section Ground3 Inclined Ground after Barrier
+      * It is for plane inclned before it there is the \b barrier  W
+      * <br> When gets here it goes towards the three big boxes on front .
+      */
      b2Body* b3;  
     {
       
@@ -152,17 +171,25 @@ namespace cs251
       b3->CreateFixture(&shape, 0.0f);
     }
 //last ground
+    /*! \section Ground4 Last Plane
+      * It is for last plane ground .
+      * <br> After striking the three \b Big \b Boxes on it the gets stopped.
+      */
       b2Body* b4;  
     {
       
       b2EdgeShape shape; 
-      shape.Set(b2Vec2(15.0f, 0.0f), b2Vec2(50.0f, 0.0f));
+      shape.Set(b2Vec2(15.0f, 0.0f), b2Vec2(500.0f, 0.0f));
       b2BodyDef bd; 
       b4 = m_world->CreateBody(&bd);
       b4->CreateFixture(&shape, 0.0f);
     }
 
 //see saw
+            /*! \section SeeSaw See-saw 
+      * Here the see-saw on the first plane ground .
+      * When bike falls on right side of it , the box kept left of it gets lifted and bike goes front.
+      */
     {
       //The triangle wedge
       b2Body* sbody;
@@ -218,6 +245,10 @@ namespace cs251
 
 
   //The pendulum that knocks the dominos off
+/*! \section SeeSaw See-saw 
+      * Here the see-saw on the first plane ground .
+      * When bike falls on right side of it , the box kept left of it gets lifted and bike goes front.
+      */
     {
       b2Body* b2;
       {
@@ -256,6 +287,9 @@ namespace cs251
 
     //garbage boxes
 //10 lower garbage boxes
+          /*! \section SquareBoxes Square Boxes 
+      * These square boxes used to obstruct the path of bike  and gets scattered after hit by bike.
+      */
 {
       b2PolygonShape shape2;
       shape2.SetAsBox(0.5f, 0.5f);
@@ -294,6 +328,9 @@ namespace cs251
 
 
 //3 big boxes
+/*! \section BigBoxes  Big Boxes
+      * These big boxes ,on the last plane ground , 
+      */
 {
       b2PolygonShape shape2;
       shape2.SetAsBox(2.0f, 2.0f);
@@ -318,8 +355,16 @@ X_increase=-54.5f;
 double scale;
 scale=0.50f;
 //central part of the bike
+/*! \section Bike  Big Boxes
+      * This is the main part in it ,the  \b Bike.
+      * <br> It contains two tyres , one main body part , one handle .
+      * <br> It also contains the driver represented as its head (circle) and wedges connecting those parts.
+      * <br>    
+      */
+
+extern b2Body* sbody;
 {
-b2Body* sbody;
+      
       b2PolygonShape poly;
       b2Vec2 vertices[6];
       vertices[0].Set(0*scale,0*scale);
@@ -331,7 +376,7 @@ b2Body* sbody;
       poly.Set(vertices, 6);
       b2FixtureDef wedgefd;
       wedgefd.shape = &poly;
-      wedgefd.density = 10.0f;
+      wedgefd.density = 5.0f;
       wedgefd.friction = 0.0f;
       wedgefd.restitution = 0.0f;
       b2BodyDef wedgebd;
