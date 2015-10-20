@@ -113,8 +113,8 @@ release:
 	make
 
 report:
-	pdflatex doc/Report.tex
-	bibtex doc/Report
+	pdflatex doc/Report.tex 
+	bibtex Report
 	pdflatex doc/Report.tex
 	pdflatex doc/Report.tex
 
