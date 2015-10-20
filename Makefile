@@ -31,7 +31,8 @@ GL_ROOT=/usr/include/
 LIBS = -lBox2D -lglui -lglut -lGLU -lGL
 
 # Compiler and Linker flags
-CPPFLAGS =-g -O3 -Wall -fno-strict-aliasing
+#CPPFLAGS =-g -O3 -Wall -fno-strict-aliasing
+CPPFLAGS+=-Wall -fno-strict-aliasing
 CPPFLAGS+=-I $(BOX2D_ROOT)/include -I $(GLUI_ROOT)/include
 LDFLAGS+=-L $(BOX2D_ROOT)/lib -L $(GLUI_ROOT)/lib
 
@@ -68,7 +69,7 @@ setup:
 
 $(BINDIR)/$(TARGET): $(OBJS)
 	@$(PRINTF) "$(MESG_COLOR)Building executable:$(NO_COLOR) $(FILE_COLOR) %16s$(NO_COLOR)" "$(notdir $@)"
-	@$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS) 2> temp.log || touch temp.err
+	@$(CC) -o $@ $(LDFLAGS) -pg $(OBJS) $(LIBS) 2> temp.log || touch temp.err
 	@if test -e temp.err; \
 	then $(PRINTF) $(ERR_FMT) $(ERR_STRING) && $(CAT) temp.log; \
 	elif test -s temp.log; \
@@ -90,12 +91,30 @@ $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	fi;
 	@$(RM) -f temp.log temp.err
 
-doc:
+codeDoc:
 	@$(ECHO) -n "Generating Doxygen Documentation ...  "
 	@$(RM) -rf doc/html
 	@$(DOXYGEN) $(DOCDIR)/Doxyfile 2 > /dev/null
 	@$(ECHO) "Done"
 
+profile:
+	@ CPPFLAGS+=-pg
+	@ LDFLAGS+=-pg
+	make
+	
+	@./bin/cs251_base
+	@ cp bin/cs251_base .
+	
+	@ gprof cs251_base gmon.out > analysis.txt
+	@ rm cs251_base
+	
+release:
+	CPPFLAGS+= -O3
+	make
+	
+
+normal:
+	CPPFLAGS+=-g -O3
 clean:
 	@$(ECHO) -n "Cleaning up..."
 	@$(RM) -rf $(OBJDIR) *~ $(DEPS) $(SRCDIR)/*~
@@ -104,7 +123,7 @@ clean:
 distclean: clean
 	@$(RM) -rf $(BINDIR) $(DOCDIR)/html
 
+
 run:
 	make 
 	@./bin/cs251_base
-
